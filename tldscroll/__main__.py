@@ -1,5 +1,6 @@
 import os
 import dotenv
+
 # Slack imports
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
@@ -12,18 +13,13 @@ SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
 
 if (not SLACK_BOT_TOKEN or not SLACK_APP_TOKEN) or not (
     SLACK_BOT_TOKEN.startswith("xoxb-") and SLACK_APP_TOKEN.startswith("xapp-")
-):  
+):
     # FATA, ERRO, DEBU, or WARN for equal spacing
     print("FATA: Invalid Slack tokens")
     exit(1)
 
 
 app = App(token=SLACK_BOT_TOKEN)
-
-
-def main():
-    global app
-    SocketModeHandler(app, SLACK_APP_TOKEN).start()
 
 
 @app.message(":wave:")
@@ -38,6 +34,19 @@ def message_hello(message, say, client: WebClient):
         user=message["user"],
     )
 
+@app.shortcut("summary")
+def handle_shortcut(ack, client: WebClient, shortcut: dict):
+    ack()
+    client.chat_postEphemeral(
+        text="Shortcut called!",
+        channel=shortcut["channel"]["id"],
+        user=shortcut["user"]["id"],
+    )
+
+
+def main():
+    global app
+    SocketModeHandler(app, SLACK_APP_TOKEN).start()
 
 
 if __name__ == "__main__":
