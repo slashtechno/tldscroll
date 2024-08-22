@@ -12,7 +12,7 @@ from slack_bolt.error import BoltUnhandledRequestError
 from slack_sdk.web.client import WebClient
 from slack_bolt.context.say import Say
 
-from tldscroll.llm import Summarizer
+from tldscroll.utils import Summarizer
 
 
 # app = None
@@ -46,25 +46,12 @@ def message_hello(message, say, client: WebClient):
 @app.shortcut("summary")
 def handle_shortcut(ack, client: WebClient, shortcut: dict, say: Say):
     ack()
-    # client.chat_postEphemeral(
-    #     text="Shortcut called!",
-    #     channel=shortcut["channel"]["id"],
-    #     user=shortcut["user"]["id"],
-    # )
-
-    # The default is 1000 which realistically, should be fine as the max token limit would probably be exceeded at that point
-    replies = client.conversations_replies(
-        channel=shortcut["channel"]["id"],
-        ts=shortcut["message"]["ts"],
+    summarizer.on_request(
+        channel_id=shortcut["channel"]["id"],
+        message_ts=shortcut["message"]["ts"],
+        say=say,
+        client=client,
     )
-    messages = []
-    for m in replies.data["messages"]:
-        print(f"{m['user']}: {m['text']}")
-        messages.append(f"<@{m['user']}>: {m['text']}")
-    # say("Summary of the thread:\n" + "\n".join(messages), thread_ts=shortcut["message"]["ts"])
-    
-    say(summarizer.summarize(messages=replies.data["messages"]), thread_ts=shortcut["message"]["ts"])
-
 
 # https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042    
 @app.error
