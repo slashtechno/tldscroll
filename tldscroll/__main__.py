@@ -12,6 +12,8 @@ from slack_bolt.error import BoltUnhandledRequestError
 from slack_sdk.web.client import WebClient
 from slack_bolt.context.say import Say
 
+from tldscroll.llm import Summarizer
+
 
 # app = None
 dotenv.load_dotenv()
@@ -27,7 +29,7 @@ if (not SLACK_BOT_TOKEN or not SLACK_APP_TOKEN) or not (
 
 
 app = App(token=SLACK_BOT_TOKEN, raise_error_for_unhandled_request=True)
-
+summarizer = Summarizer()
 
 @app.message(":wave:")
 # https://slack.dev/bolt-python/api-docs/slack_bolt/kwargs_injection/args.html
@@ -59,8 +61,9 @@ def handle_shortcut(ack, client: WebClient, shortcut: dict, say: Say):
     for m in replies.data["messages"]:
         print(f"{m['user']}: {m['text']}")
         messages.append(f"<@{m['user']}>: {m['text']}")
-    say("Summary of the thread:\n" + "\n".join(messages), thread_ts=shortcut["message"]["ts"])
+    # say("Summary of the thread:\n" + "\n".join(messages), thread_ts=shortcut["message"]["ts"])
     
+    say(summarizer.summarize(messages=replies.data["messages"]), thread_ts=shortcut["message"]["ts"])
 
 
 # https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042    
