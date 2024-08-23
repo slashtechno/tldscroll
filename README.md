@@ -1,6 +1,8 @@
 # Too Long; Didn't Scroll (TL;DS)  
 A Slack bot that helps you to summarize long messages and threads.  
 
+[![Demo](tldscroll-demo_2024-08-22_19-24-01.gif)](tldscroll-demo_2024-08-22_19-24-01.mp4)
+
 
 ### Some more details  
 TL;DS uses an Llama 3.1 to summarize long messages and threads. It can be used as a [message action](https://api.slack.com/interactivity/shortcuts#message) or as a [command](https://slack.com/help/articles/360057554553-Use-shortcuts-to-take-actions-in-Slack).  
