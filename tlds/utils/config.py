@@ -37,6 +37,3 @@ settings.validators.register(
 )
 
 settings.validators.validate()
-
-for key, value in settings.items():
-    print(key, value)
