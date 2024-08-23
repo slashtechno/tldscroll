@@ -14,13 +14,14 @@ from slack_bolt.error import BoltUnhandledRequestError
 from slack_bolt.context.say import Say
 from slack_bolt.context.respond import Respond
 from slack_sdk.errors import SlackApiError
-from tlds.utils import Summarizer
 
+from tlds.utils import Summarizer
+from tlds import settings
 
 # app = None
 dotenv.load_dotenv()
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
-SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
+SLACK_BOT_TOKEN = settings.slack_bot_token
+SLACK_APP_TOKEN = settings.slack_app_token
 
 if (not SLACK_BOT_TOKEN or not SLACK_APP_TOKEN) or not (
     SLACK_BOT_TOKEN.startswith("xoxb-") and SLACK_APP_TOKEN.startswith("xapp-")
