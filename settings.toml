@@ -1,0 +1,6 @@
+# [llm.openai]
+# api_key = "your_openai_api_key" # TODO: Move this to .secrets.toml
+# model = ""
+
+[llm.ollama]
+endpoint = "endpoint"

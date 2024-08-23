@@ -18,17 +18,9 @@ from slack_sdk.errors import SlackApiError
 from tlds.utils import Summarizer
 from tlds import settings
 
-# app = None
 dotenv.load_dotenv()
 SLACK_BOT_TOKEN = settings.slack_bot_token
 SLACK_APP_TOKEN = settings.slack_app_token
-
-if (not SLACK_BOT_TOKEN or not SLACK_APP_TOKEN) or not (
-    SLACK_BOT_TOKEN.startswith("xoxb-") and SLACK_APP_TOKEN.startswith("xapp-")
-):
-    # FATA, ERRO, DEBU, or WARN for equal spacing
-    print("FATA: Invalid Slack tokens")
-    exit(1)
 
 
 app = App(token=SLACK_BOT_TOKEN, raise_error_for_unhandled_request=True)
