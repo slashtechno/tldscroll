@@ -56,7 +56,7 @@ def handle_shortcut(ack, client: WebClient, shortcut: dict, say: Say):
     )
 
 
-@app.command("/summarize")
+@app.command("/tlds")
 def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
     ack()
     channel_id = command["channel_id"],

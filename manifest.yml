@@ -1,0 +1,36 @@
+display_information:
+  name: tlds
+  description: Too long; didn't scroll
+  background_color: "#083840"
+features:
+  bot_user:
+    display_name: tl;ds
+    always_online: false
+  shortcuts:
+    - name: Summarize
+      type: message
+      callback_id: summary
+      description: Summarize a message and its replies
+  slash_commands:
+    - command: /tlds
+      description: Summarize message & thread
+      usage_hint: "[link to message]"
+      should_escape: false
+oauth_config:
+  scopes:
+    user:
+      - channels:history
+    bot:
+      - channels:history
+      - chat:write
+      - users:read
+      - commands
+settings:
+  event_subscriptions:
+    bot_events:
+      - message.channels
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false
