@@ -1,17 +1,24 @@
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-
 # Type hints
+# https://github.com/cdgriffith/Box
+from dynaconf.utils.boxing import DynaBox
 from slack_bolt.context.say import Say
 from slack_sdk.web.client import WebClient
 
 
 class Summarizer:
-    def __init__(self, model_name: str = "llama3.1:8b"):
-        # self.model = Ollama(model_name=model_name)
-        self._llm = ChatOllama(model=model_name)
+    def __init__(self, llm: DynaBox):
 
+        model = llm.model if llm.model is not None else "llama3.1:8b"
+
+        if llm.get("ollama") is not None and llm.get("openai") is None:
+            self._llm = ChatOllama(model=model, base_url=llm.ollama.base_url)
+        elif llm.get("openai") is not None and llm.get("ollama") is None:
+            ...
+        else:
+            raise ValueError("Either llm.ollama or llm.openai must be set. Only one can be set.")
     def summarize(self, messages: list, bot_user_id: str) -> str:
         """
         Summarize a conversation thread.

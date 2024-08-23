@@ -24,19 +24,8 @@ SLACK_APP_TOKEN = settings.slack_app_token
 
 
 app = App(token=SLACK_BOT_TOKEN, raise_error_for_unhandled_request=True)
-summarizer = Summarizer()
+summarizer = Summarizer(settings.llm)
 
-@app.message(":wave:")
-# https://slack.dev/bolt-python/api-docs/slack_bolt/kwargs_injection/args.html
-def message_hello(message, say, client: WebClient):
-    # say() sends a message to the channel where the event was triggered
-    say(f"Hey there <@{message['user']}>!")
-    # This will only send a message to the user who triggered the event
-    client.chat_postEphemeral(
-        text="Hey there!",
-        channel=message["channel"],
-        user=message["user"],
-    )
 
 @app.shortcut("summary")
 def handle_shortcut(ack, client: WebClient, shortcut: dict, say: Say):
@@ -47,7 +36,7 @@ def handle_shortcut(ack, client: WebClient, shortcut: dict, say: Say):
         say=say,
         client=client,
     )
-
+    
 
 @app.command("/tlds")
 def summarize_command(ack, client: WebClient, command: dict, respond: Respond):

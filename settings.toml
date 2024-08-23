@@ -2,4 +2,4 @@ llm.model = "llama3.1:8b"
 # [llm.openai]
 # base_url = "https://api.openai.com/v1"
 [llm.ollama]
-endpoint = "endpoint"
+base_url = "http://localhost:11434"
