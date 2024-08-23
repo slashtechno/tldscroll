@@ -15,6 +15,7 @@ settings = Dynaconf(
     envvar_prefix="TLDS",
     load_dotenv=True,
     settings_files=["settings.toml", ".secrets.toml"],
+    merge_enabled=True,
 )
 settings.validators.register(
         validators=[
@@ -30,15 +31,12 @@ settings.validators.register(
             condition=lambda x: x.startswith("xapp-"),
             messages={"condition": "Must start with 'xapp-'"},
         ),
-        # Validator(
-        #     "llm.openai",
-        #     must_exist=True,
-        #     when=lambda v: settings.get("llm.ollama") is None,
-        #     messages={"condition": "Either llm.ollama or llm.openai must be set"},
-        # ),
         Validator("llm.ollama", condition=ollama_validator, messages={"condition": "Either llm.ollama or llm.openai must be set. Only one can be set."}),
         Validator("llm.openai", condition=openai_validator, messages={"condition": "Either llm.ollama or llm.openai must be set. Only one can be set."}),
     ],
 )
 
 settings.validators.validate()
+
+for key, value in settings.items():
+    print(key, value)
