@@ -13,9 +13,10 @@ TL;DS uses an Llama 3.1 to summarize long messages and threads. It can be used a
 3. Install the app to your workspace  
 4. Clone the repository  
 5. Ensuring you have [Poetry](https://python-poetry.org/) installed, run `poetry install`  
-6. Copy the `example.env` file to `.env` and fill in the values
 <!-- Even though .secrets.toml may be better, .env can easily be loaded by Docker Compose -->
-7. Run `poetry run python -m tlds`  
+6. Copy the `example.env` file to `.env` and fill in the values
+7. Copy the `example.settings.toml` file to `settings.toml` and fill in the values
+8. Run `poetry run python -m tlds`  
 
 ### Usage  
 1. Add the app to channel(s) where you want it to be able to summarize messages from   

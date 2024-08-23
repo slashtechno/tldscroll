@@ -15,6 +15,7 @@ langchain = "^0.2.14"
 langchain-community = "^0.2.12"
 langchain-ollama = "^0.1.1"
 dynaconf = "^3.2.6"
+langchain-openai = "^0.1.22"
 
 
 [build-system]

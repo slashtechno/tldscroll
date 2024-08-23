@@ -1,5 +1,10 @@
+# Only one provider can be active at a time
+
 llm.model = "llama3.1:8b"
+
 # [llm.openai]
 # base_url = "https://api.openai.com/v1"
+# API key is set in .secrets.toml or .env (with the prefix TLDS_)
+
 [llm.ollama]
 base_url = "http://localhost:11434"

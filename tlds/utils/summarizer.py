@@ -1,4 +1,5 @@
 from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 # Type hints
@@ -16,7 +17,11 @@ class Summarizer:
         if llm.get("ollama") is not None and llm.get("openai") is None:
             self._llm = ChatOllama(model=model, base_url=llm.ollama.base_url)
         elif llm.get("openai") is not None and llm.get("ollama") is None:
-            ...
+            self._llm = ChatOpenAI(
+                model=model,
+                api_key=llm.openai.api_key,
+                base_url=llm.openai.base_url,
+            )
         else:
             raise ValueError("Either llm.ollama or llm.openai must be set. Only one can be set.")
     def summarize(self, messages: list, bot_user_id: str) -> str:
