@@ -5,8 +5,8 @@ from langchain_core.output_parsers import StrOutputParser
 # Type hints
 # https://github.com/cdgriffith/Box
 from dynaconf.utils.boxing import DynaBox
-from slack_bolt.context.say import Say
 from slack_sdk.web.client import WebClient
+from slack_bolt.context.respond import Respond
 
 
 class Summarizer:
@@ -50,7 +50,7 @@ class Summarizer:
 
         return chain.invoke({})
     
-    def on_request(self, channel_id: str, message_ts: str, say: Say, client: WebClient):
+    def on_request(self, channel_id: str, message_ts: str, user_id: str, client: WebClient):
         """
         Summarize a message, or thread, given a channel ID and message timestamp.
         If the message is in a thread, only the message will be summarized.
@@ -74,4 +74,9 @@ class Summarizer:
 
         summary = self.summarize(messages=replies.data["messages"], bot_user_id=bot_user_id)
         print(f"Summary: {summary}")
-        say(summary, thread_ts=message_ts)
+        client.chat_postEphemeral(
+            channel=channel_id,
+            text=summary,
+            thread_ts=message_ts,
+            user=user_id,
+        )

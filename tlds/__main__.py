@@ -11,7 +11,6 @@ from slack_sdk.web.client import WebClient
 from slack_bolt.error import BoltUnhandledRequestError
 
 # Types
-from slack_bolt.context.say import Say
 from slack_bolt.context.respond import Respond
 from slack_sdk.errors import SlackApiError
 
@@ -28,12 +27,12 @@ summarizer = Summarizer(settings.llm)
 
 
 @app.shortcut("summary")
-def handle_shortcut(ack, client: WebClient, shortcut: dict, say: Say):
+def handle_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
     ack()
     summarizer.on_request(
         channel_id=shortcut["channel"]["id"],
         message_ts=shortcut["message"]["ts"],
-        say=say,
+        user_id=shortcut["user"]["id"],
         client=client,
     )
     
@@ -56,13 +55,13 @@ def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
     summarizer.on_request(
         channel_id=channel_id,
         message_ts=message_ts,
-        say=respond,
+        user_id=command["user_id"],
         client=client,
     )
 
 # https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042    
 @app.error
-def handle_errors(error, body, respond):
+def handle_errors(error, body, respond: Respond):
     if isinstance(error, BoltUnhandledRequestError):
         return BoltResponse(status=200, body="")
     else:
