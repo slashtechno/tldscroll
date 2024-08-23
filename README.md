@@ -1,7 +1,7 @@
 # Too Long; Didn't Scroll (TL;DS)  
 A Slack bot that helps you to summarize long messages and threads.  
 
-[![Demo](tldscroll-demo_2024-08-22_19-24-01.gif)](tldscroll-demo_2024-08-22_19-24-01.mp4)
+[![Demo](tlds-demo_2024-08-22_19-24-01.gif)](tlds-demo_2024-08-22_19-24-01.mp4)
 
 
 ### Some more details  
@@ -14,8 +14,8 @@ TL;DS uses an Llama 3.1 to summarize long messages and threads. It can be used a
 4. Clone the repository  
 5. Ensuring you have [Poetry](https://python-poetry.org/) installed, run `poetry install`  
 6. Copy the `example.env` file to `.env` and fill in the values
-7. Run `poetry run python -m tldscroll`  
+7. Run `poetry run python -m tlds`  
 
 ### Usage  
 1. Add the app to channel(s) where you want it to be able to summarize messages from   
-2. Use the `/tldscroll` command or the "Summarize" message action to summarize messages  
+2. Use the `/tlds` command or the "Summarize" message action to summarize messages  

@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "tldscroll"
+name = "tlds"
 version = "0.1.0"
 description = ""
 authors = ["Angad Behl <angad@angad.me>"]
 readme = "README.md"
-packages = [{ include = "tldscroll" }]
-scripts = { tldscroll = "tldscroll.__main__:main" }
+packages = [{ include = "tlds" }]
+scripts = { tlds = "tlds.__main__:main" }
 
 [tool.poetry.dependencies]
 python = "^3.12"

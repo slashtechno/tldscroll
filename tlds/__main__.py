@@ -14,7 +14,7 @@ from slack_bolt.error import BoltUnhandledRequestError
 from slack_bolt.context.say import Say
 from slack_bolt.context.respond import Respond
 from slack_sdk.errors import SlackApiError
-from tldscroll.utils import Summarizer
+from tlds.utils import Summarizer
 
 
 # app = None

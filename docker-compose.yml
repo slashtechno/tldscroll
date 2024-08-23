@@ -1,0 +1,8 @@
+services:
+  tlds:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: unless-stopped
+    tty: true
