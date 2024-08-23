@@ -18,6 +18,9 @@ dynaconf = "^3.2.6"
 langchain-openai = "^0.1.22"
 
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

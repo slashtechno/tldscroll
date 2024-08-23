@@ -35,17 +35,17 @@ def handle_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
         user_id=shortcut["user"]["id"],
         client=client,
     )
-    
+
 
 @app.command("/tlds")
 def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
     ack()
-    channel_id = command["channel_id"],
+    channel_id = (command["channel_id"],)
 
     # Parse permalink
     # https://api.slack.com/methods/chat.getPermalink#examples
     # https://api.slack.com/methods/conversations.history#single-message
-    match = re.search(r'/archives/(\w+)/p(\d+)', command["text"])
+    match = re.search(r"/archives/(\w+)/p(\d+)", command["text"])
     if not match:
         respond("Invalid permalink")
         return
@@ -59,7 +59,8 @@ def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
         client=client,
     )
 
-# https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042    
+
+# https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042
 @app.error
 def handle_errors(error, body, respond: Respond):
     if isinstance(error, BoltUnhandledRequestError):
@@ -67,10 +68,13 @@ def handle_errors(error, body, respond: Respond):
     else:
         print(f"Error: {error.response.data["error"]}")
         try:
-            respond("Something went wrong. If this persists, please contact <@U075RTSLDQ8>.")
+            respond(
+                "Something went wrong. If this persists, please contact <@U075RTSLDQ8>."
+            )
         except SlackApiError as e:
             print(f"Error sending message: {e.response['error']}")
         return BoltResponse(status=500, body="Something Wrong")
+
 
 def main():
     global app
