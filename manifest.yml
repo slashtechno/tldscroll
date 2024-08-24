@@ -13,11 +13,11 @@ features:
     - name: Generate summary
       type: message
       callback_id: summary
-      description: Summarize a message and its replies. The summmary is sent as an ephermal message.  To send a public, non-ephermal message, use `Generate public summary`.
-    - name: Generate public summary 
+      description: Summarize a message and its replies. The summmary is sent as an ephermal message. Use `Generate public summary` to send it as a message in the thread.
+    - name: Generate public summary
       type: message
       callback_id: public_summary
-      description: Summarize a message and its replies. The summmary is sent as a public message.  To send an ephemeral message only visible to you, use `Generate summary`.
+      description: Summarize a message and its replies. The summmary is sent as a reply. For an ephemeral summary only visible to you, use `Generate summary`.
   slash_commands:
     - command: /tlds
       description: Summarize message & thread
