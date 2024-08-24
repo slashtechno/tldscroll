@@ -3,6 +3,7 @@ from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+import ollama
 
 # Types
 # https://github.com/cdgriffith/Box
@@ -16,6 +17,12 @@ class Summarizer:
         model = llm.model if llm.model is not None else "llama3.1:8b"
 
         if llm.get("ollama") is not None and llm.get("openai") is None:
+            models = ollama.Client(host=llm.ollama.base_url).list()["models"]
+            for m in models:
+                if m["name"] == model:
+                    break
+            else: 
+                print(f"WARN: Model {model} not found in Ollama. Attempting to continue, but this may result in issues.\nAvailable models: {models}")
             self._llm = ChatOllama(model=model, base_url=llm.ollama.base_url)
         elif llm.get("openai") is not None and llm.get("ollama") is None:
             self._llm = ChatOpenAI(

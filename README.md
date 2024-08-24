@@ -40,6 +40,8 @@ If you want to run the container in the background, use the `-d` flag:
 ```sh
 docker-compose up -d
 ```
+If you have Ollama running on the host, the host can be accessed by the container by using `host.docker.internal` as the host name. For example, if Ollama is running on port `11434` (the default), setting the `base_url` to `http://host.docker.internal:11434` will allow the container to access Ollama.  
+
 ##### Poetry  
 If you want to run the server without Docker, you can use [Poetry](https://python-poetry.org/):    
 ```sh
