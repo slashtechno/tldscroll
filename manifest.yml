@@ -1,7 +1,10 @@
 display_information:
   name: tlds
-  description: Too long; didn't scroll
-  background_color: "#083840"
+  description: Summary messages and threads
+  background_color: "#060238"
+  long_description: "Ever see a long message or a thread you don't feel like reading through? Too Long; Didn't Scroll (TL;DS) allows you to summarize a message with the message shortcuts `Summarize` and `Summarize publicly`, in addition to the `/tlds` command.\r
+
+    Summarizing, by default, will send an ephemeral message only visible to you. Alternatively, a public summary will result in a message being sent as a reply to the message."
 features:
   bot_user:
     display_name: tl;ds
