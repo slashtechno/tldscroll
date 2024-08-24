@@ -10,11 +10,15 @@ features:
     - name: Summarize
       type: message
       callback_id: summary
-      description: Summarize a message and its replies
+      description: Summarize a message and its replies. The summmary is sent as an ephermal message.  To send a public, non-ephermal message, use `Summarize publicly`.
+    - name: Summarize publicly
+      type: message
+      callback_id: public_summary
+      description: Summarize a message and its replies. The summmary is sent as a public message.  To send an ephemeral message only visible to you, use `Summarize`.
   slash_commands:
     - command: /tlds
       description: Summarize message & thread
-      usage_hint: "[link to message]"
+      usage_hint: messagelink [public/ephemeral]
       should_escape: false
 oauth_config:
   scopes:
@@ -23,8 +27,11 @@ oauth_config:
     bot:
       - channels:history
       - chat:write
-      - users:read
       - commands
+      - users:read
+      - groups:write
+      - im:write
+      - mpim:write
 settings:
   event_subscriptions:
     bot_events:

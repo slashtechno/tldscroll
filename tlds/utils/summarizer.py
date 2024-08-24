@@ -4,10 +4,11 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# Type hints
+# Types
 # https://github.com/cdgriffith/Box
 from dynaconf.utils.boxing import DynaBox
 from slack_sdk.web.client import WebClient
+from slack_sdk.errors import SlackApiError
 
 
 class Summarizer:
@@ -38,7 +39,7 @@ class Summarizer:
             (
                 "system",
                 # "Summarize the messages in this conversation. Only output the summary. To mention a user, use <@user_id>. If there's only one message in the conversation, just summarize that message.",
-                "Summarize the messages in this conversation. Only output the summary. To mention a user, use <@user_id>. Even if there's only one message in the conversation, try to provide a summary of that message so that someone just reading the summary can understand the major points of the conversation (or standalone message).",
+                "Summarize the messages in this conversation. Only output the summary. To mention a user, use <@user_id> (Slack syntax). Even if there's only one message in the conversation, try to provide a summary of that message so that someone just reading the summary can understand the major points of the conversation (or standalone message). If you cannot retrieve the user ID, don't try mentioning the user as it most likely means it's an app/bot message.",
             ),
         ]
         for m in messages:
@@ -51,7 +52,7 @@ class Summarizer:
                     )
                     user = bot.data["bot"]["user_id"] 
                 except KeyError:
-                    user = "UNKNOWN USER"
+                    user = "(UNABLE TO RETRIEVE USER ID)"
             if user == bot_user_id:
                 continue
             print(f"{user}: {m['text']}")
@@ -73,10 +74,21 @@ class Summarizer:
 
         The bot ignores its own messages when summarizing.
         """
-        replies = client.conversations_replies(
+        try:
+            replies = client.conversations_replies(
             channel=channel_id,
             ts=message_ts,
         )
+        except SlackApiError as e:
+            if e.response.data["error"] == "not_in_channel":
+                dm = client.conversations_open(users=user_id).data["channel"]["id"]
+                client.chat_postEphemeral(
+                    channel=dm,
+                    text=f"You tried to summarize a message in <#{channel_id}>, but I don't have access to that channel. Please invite me to the channel and try again.",
+                    user=user_id,
+                )
+                return
+            raise e
         # messages = []
         # for m in replies.data["messages"]:
         # print(f"{m['user']}: {m['text']}")
@@ -98,7 +110,7 @@ class Summarizer:
             )
             client.chat_postMessage(
                 channel=channel_id,
-                text=f"Summary of <{link.data['permalink']}|the thread> requested by <@{user_id}>:\n{summary}",
+                text=f"Summary of <{link.data['permalink']}|the message/thread> requested by <@{user_id}>:\n{summary}",
                 thread_ts=message_ts,
                 mrkdwn=True,
             )

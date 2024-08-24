@@ -26,7 +26,7 @@ summarizer = Summarizer(settings.llm)
 
 
 @app.shortcut("summary")
-def handle_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
+def summary_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
     ack()
     summarizer.on_request(
         channel_id=shortcut["channel"]["id"],
@@ -36,7 +36,17 @@ def handle_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
         visibility="ephemeral",
     )
 
-
+@app.shortcut("public_summary")
+def public_summary_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
+    ack()
+    summarizer.on_request(
+        channel_id=shortcut["channel"]["id"],
+        message_ts=shortcut["message"]["ts"],
+        user_id=shortcut["user"]["id"],
+        client=client,
+        visibility="public",
+    )
+    
 @app.command("/tlds")
 def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
     ack()
