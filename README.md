@@ -9,9 +9,11 @@ A Slack bot that helps you to summarize long messages and threads.
     * Running on a top-level message will summarize the message along with its replies, if any exist  
     * Running on a reply will summarize the reply  
 * Summarize messages and threads with a single click (well, two clicks)
-    * Use the "Summarize" message action to summarize
+    * Use the `Generate Summary` message action to summarize
 * Customizable visibility
     * When using the `/tlds` command, you can choose whether the summary is visible to everyone or is ephemeral and only visible to you  
+    * When using the `Generate summary` message action, the summary is ephemeral and only visible to you
+    * When using the `Generate public summary` message action, the summary is visible to everyone
 * Customizable LLM model and provider  
     * Supports [Ollama](https://ollama.com/) for local/on-premises summarization  
     * Supports OpenAI-compatible APIs for cloud-based summarization
@@ -48,4 +50,4 @@ poetry run python -m tlds
 
 ### Usage  
 1. Add the app to channel(s) where you want it to be able to summarize messages from   
-2. Use the `/tlds` command or the "Summarize" message action to summarize messages  
+2. Use the `/tlds` command or the `Generate Summary`/`Generate public summary` message actions to summarize messages and threads
