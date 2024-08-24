@@ -3,8 +3,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     env_file: .env
     restart: unless-stopped
     tty: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  ollama:
+    volumes:
+      - ollama:/root/.ollama
+    container_name: ollama
+    restart: unless-stopped
+    image: ollama/ollama:latest
+volumes:
+  ollama:

@@ -41,6 +41,7 @@ If you want to run the container in the background, use the `-d` flag:
 docker-compose up -d
 ```
 If you have Ollama running on the host, the host can be accessed by the container by using `host.docker.internal` as the host name. For example, if Ollama is running on port `11434` (the default), setting the `base_url` to `http://host.docker.internal:11434` will allow the container to access Ollama.  
+The `docker-compose.yml` file also has a commented-out section for Ollama that can be used. However, setting it up on the host or by itself can offer more flexibility. To use the Ollama section in the `docker-compose.yml` file, uncomment the section. The `base_url` should be `http://ollama:11434` in this case.  
 
 ##### Poetry  
 If you want to run the server without Docker, you can use [Poetry](https://python-poetry.org/):    
