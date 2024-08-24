@@ -4,8 +4,19 @@ A Slack bot that helps you to summarize long messages and threads.
 [![Demo](tlds-demo_2024-08-22_19-24-01.gif)](tlds-demo_2024-08-22_19-24-01.mp4)
 
 
-### Some more details  
-TL;DS uses an Llama 3.1 to summarize long messages and threads. It can be used as a [message action](https://api.slack.com/interactivity/shortcuts#message) or as a [command](https://slack.com/help/articles/360057554553-Use-shortcuts-to-take-actions-in-Slack).  
+### Features  
+* Summarize messages and threads
+    * Running on a top-level message will summarize the message along with its replies, if any exist  
+    * Running on a reply will summarize the reply  
+* Summarize messages and threads with a single click (well, two clicks)
+    * Use the "Summarize" message action to summarize
+* Customizable visibility
+    * When using the `/tlds` command, you can choose whether the summary is visible to everyone or is ephemeral and only visible to you  
+* Customizable LLM model and provider  
+    * Supports [Ollama](https://ollama.com/) for local/on-premises summarization  
+    * Supports OpenAI-compatible APIs for cloud-based summarization
+        * Examples include [OpenAI](https://openai.com/) and [OpenRouter](https://openrouter.ai/)  
+
 
 ### Setup   
 1. Create a new Slack app at [api.slack.com/apps](https://api.slack.com/apps)

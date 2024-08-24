@@ -1,3 +1,4 @@
+from typing import Literal
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -26,7 +27,7 @@ class Summarizer:
                 "Either llm.ollama or llm.openai must be set. Only one can be set."
             )
 
-    def summarize(self, messages: list, bot_user_id: str) -> str:
+    def summarize(self, messages: list, bot_user_id: str, client: WebClient) -> str:
         """
         Summarize a conversation thread.
         """
@@ -36,14 +37,25 @@ class Summarizer:
         context_messages = [
             (
                 "system",
-                "Summarize the messages in this conversation. Only output the summary. To mention a user, use <@user_id>. If there's only one message in the conversation, just summarize that message.",
+                # "Summarize the messages in this conversation. Only output the summary. To mention a user, use <@user_id>. If there's only one message in the conversation, just summarize that message.",
+                "Summarize the messages in this conversation. Only output the summary. To mention a user, use <@user_id>. Even if there's only one message in the conversation, try to provide a summary of that message so that someone just reading the summary can understand the major points of the conversation (or standalone message).",
             ),
         ]
         for m in messages:
-            if m["user"] == bot_user_id:
+            try:
+                user = m["user"]
+            except KeyError:
+                try: 
+                    bot = client.bots_info(
+                        bot=m["bot_id"],
+                    )
+                    user = bot.data["bot"]["user_id"] 
+                except KeyError:
+                    user = "UNKNOWN USER"
+            if user == bot_user_id:
                 continue
-            print(f"{m['user']}: {m['text']}")
-            context_messages.append(("user", f"<@{m['user']}>: {m['text']}"))
+            print(f"{user}: {m['text']}")
+            context_messages.append(("user", f"<@{user}>: {m['text']}"))
 
         prompt_template = ChatPromptTemplate.from_messages(context_messages)
 
@@ -52,7 +64,7 @@ class Summarizer:
         return chain.invoke({})
 
     def on_request(
-        self, channel_id: str, message_ts: str, user_id: str, client: WebClient
+        self, channel_id: str, message_ts: str, user_id: str, client: WebClient, visibility: Literal["public", "ephemeral"] = "public"
     ):
         """
         Summarize a message, or thread, given a channel ID and message timestamp.
@@ -75,12 +87,35 @@ class Summarizer:
         bot_user_id = client.auth_test().data["user_id"]
 
         summary = self.summarize(
-            messages=replies.data["messages"], bot_user_id=bot_user_id
+            messages=replies.data["messages"], bot_user_id=bot_user_id, client=client
         )
         print(f"Summary: {summary}")
-        client.chat_postEphemeral(
-            channel=channel_id,
-            text=summary,
-            thread_ts=message_ts,
-            user=user_id,
-        )
+        
+        if visibility == "public":
+            link = client.chat_getPermalink(
+                channel=channel_id,
+                message_ts=message_ts,
+            )
+            client.chat_postMessage(
+                channel=channel_id,
+                text=f"Summary of <{link.data['permalink']}|the thread> requested by <@{user_id}>:\n{summary}",
+                thread_ts=message_ts,
+                mrkdwn=True,
+            )
+        else:
+            # From the docs: "Ephemeral messages in threads are only shown if there is already an active thread.""
+            kwargs_to_pass = {
+                "channel": channel_id,
+                "text": summary,
+                "user": user_id,
+            }
+
+            if len(replies.data["messages"]) == 1:
+                client.chat_postEphemeral(
+                    **kwargs_to_pass,
+                )
+            else: 
+                kwargs_to_pass["thread_ts"] = message_ts
+                client.chat_postEphemeral(
+                    **kwargs_to_pass,
+                )

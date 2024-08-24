@@ -33,6 +33,7 @@ def handle_shortcut(ack, client: WebClient, shortcut: dict, respond: Respond):
         message_ts=shortcut["message"]["ts"],
         user_id=shortcut["user"]["id"],
         client=client,
+        visibility="ephemeral",
     )
 
 
@@ -44,18 +45,20 @@ def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
     # Parse permalink
     # https://api.slack.com/methods/chat.getPermalink#examples
     # https://api.slack.com/methods/conversations.history#single-message
-    match = re.search(r"/archives/(\w+)/p(\d+)", command["text"])
+    match = re.search(r"/archives/(\w+)/p(\d+)(?:\s*)(public|ephemeral)?", command["text"])
     if not match:
-        respond("Invalid permalink")
+        respond("Invalid permalink. Command must be in the format `/tlds <permalink> <public|ephemeral>`. If public or ephemeral is not specified, the default is ephemeral.")
         return
     channel_id = match.group(1)
     message_ts = f"{match.group(2)[:10]}.{match.group(2)[10:]}"
-
+    visibility = match.group(3) or "ephemeral"
+    
     summarizer.on_request(
         channel_id=channel_id,
         message_ts=message_ts,
         user_id=command["user_id"],
         client=client,
+        visibility=visibility,
     )
 
 
