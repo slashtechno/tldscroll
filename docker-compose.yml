@@ -9,11 +9,11 @@ services:
     tty: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
-  ollama:
-    volumes:
-      - ollama:/root/.ollama
-    container_name: ollama
-    restart: unless-stopped
-    image: ollama/ollama:latest
-volumes:
-  ollama:
+#   ollama:
+#     volumes:
+#       - ollama:/root/.ollama
+#     container_name: ollama
+#     restart: unless-stopped
+#     image: ollama/ollama:latest
+# volumes:
+#   ollama:
