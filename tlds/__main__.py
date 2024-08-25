@@ -72,6 +72,13 @@ def summarize_command(ack, client: WebClient, command: dict, respond: Respond):
     )
 
 
+@app.command("/tlds-channels")
+def list_channels(ack, client: WebClient, respond: Respond):
+    ack()
+    channels = [f"<#{c["id"]}>" for c in client.users_conversations().data["channels"]]
+    respond(f"You can use TL;DS in the following channels: {', '.join(channels)}\nWant it in a channel not listed? Invite `tlds` to the channel.")
+
+
 # https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042
 @app.error
 def handle_errors(error, body, respond: Respond):

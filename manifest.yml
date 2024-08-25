@@ -23,6 +23,9 @@ features:
       description: Summarize message & thread
       usage_hint: messagelink [public/ephemeral]
       should_escape: false
+    - command: /tlds-channels
+      description: List channels where TL;DS can be used
+      should_escape: false
 oauth_config:
   scopes:
     user:
@@ -31,10 +34,11 @@ oauth_config:
       - channels:history
       - chat:write
       - commands
-      - users:read
       - groups:write
       - im:write
       - mpim:write
+      - users:read
+      - channels:read
 settings:
   event_subscriptions:
     bot_events:
