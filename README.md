@@ -18,6 +18,7 @@ A Slack bot that helps you to summarize long messages and threads.
     * Supports [Ollama](https://ollama.com/) for local/on-premises summarization  
     * Supports OpenAI-compatible APIs for cloud-based summarization
         * Examples include [OpenAI](https://openai.com/) and [OpenRouter](https://openrouter.ai/)  
+* A help command (`/tlds-help`) to show the available commands and options
 
 
 ### Setup   
