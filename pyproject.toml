@@ -6,6 +6,7 @@ authors = ["Angad Behl <angad@angad.me>"]
 readme = "README.md"
 packages = [{ include = "tlds" }]
 scripts = { tlds = "tlds.__main__:main" }
+include = ["manifest.yml"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -17,7 +18,7 @@ langchain-ollama = "^0.1.1"
 dynaconf = "^3.2.6"
 langchain-openai = "^0.1.22"
 ollama = "^0.3.1"
-
+pyyaml = "^6.0.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.2"

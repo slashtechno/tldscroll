@@ -1,18 +1,19 @@
 import dotenv
 import re
+import yaml
+import importlib.resources
 
 # Slack imports
 from slack_bolt import App, BoltResponse
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_sdk.web.client import WebClient
 
-# To avoid a log message about unhandled requests
-from slack_bolt.error import BoltUnhandledRequestError
 
 # Types
 from slack_bolt.context.respond import Respond
 from slack_sdk.errors import SlackApiError
-
+# To avoid a log message about unhandled requests
+from slack_bolt.error import BoltUnhandledRequestError
 from tlds.utils import Summarizer
 from tlds import settings
 
@@ -78,6 +79,45 @@ def list_channels(ack, client: WebClient, respond: Respond):
     channels = [f"<#{c["id"]}>" for c in client.users_conversations().data["channels"]]
     respond(f"You can use TL;DS in the following channels: {', '.join(channels)}\nWant it in a channel not listed? Invite `tlds` to the channel.")
 
+
+@app.command("/tlds-help")
+def help_command(ack, respond: Respond):
+    ack()
+    manifest_path = importlib.resources.files(__package__).parent / "manifest.yml"
+    with open(manifest_path, "r") as f:
+        features = yaml.safe_load(f)["features"]
+
+    help_text = "Commands:"
+    slash_commands = features["slash_commands"]
+    for command in slash_commands:
+        try:
+            help_text += f"\n`{command['command']} {command['usage_hint']}`: {command['description']}"
+        except KeyError:
+            # Most likely means that usage_hint is not defined
+            help_text += f"\n`{command['command']}`: {command['description']}"
+    if len(slash_commands) == 0:
+        help_text += "\nNo commands available.\n"
+    else: 
+        help_text += "\n"
+    
+    shortcuts = features["shortcuts"]
+    help_text += "\nShortcuts:"
+    message_shortcuts_text = "Message shortcuts:"
+    global_shortcuts_text = "Global shortcuts:"
+    for shortcut in shortcuts:
+        if shortcut["type"] == "message":
+            message_shortcuts_text += f"\n`{shortcut["name"]}`: {shortcut['description']}"
+        elif shortcut["type"] == "global":
+            global_shortcuts_text += f"\n`{shortcut["name"]}`: {shortcut['description']}"
+    if len(shortcuts) == 0:
+        help_text += "\nNo shortcuts available."
+    else:
+        if message_shortcuts_text != "Message shortcuts:":
+            help_text += f"\n{message_shortcuts_text}"
+        if global_shortcuts_text != "Global shortcuts:":
+            help_text += f"\n{global_shortcuts_text}"
+    
+    respond(help_text)
 
 # https://github.com/slackapi/bolt-python/issues/299#issuecomment-823590042
 @app.error

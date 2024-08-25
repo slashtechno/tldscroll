@@ -4,7 +4,11 @@ display_information:
   background_color: "#060238"
   long_description: "Ever see a long message or a thread you don't feel like reading through? Too Long; Didn't Scroll (TL;DS) allows you to summarize a message with the message shortcuts `Generate summary` and `Generate public summary`, in addition to the `/tlds` command.\r
 
-    Summarizing, by default, will send an ephemeral message only visible to you. Alternatively, a public summary will result in a message being sent as a reply to the message."
+    Summarizing, by default, will send an ephemeral message only visible to you. Alternatively, a public summary will result in a message being sent as a reply to the message.\r
+
+    \r
+
+    For more information, run `/tlds-help`"
 features:
   bot_user:
     display_name: tl;ds
@@ -25,6 +29,9 @@ features:
       should_escape: false
     - command: /tlds-channels
       description: List channels where TL;DS can be used
+      should_escape: false
+    - command: /tlds-help
+      description: List commands and shortcuts
       should_escape: false
 oauth_config:
   scopes:
